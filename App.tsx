@@ -32,12 +32,10 @@ import Geolocation, { GeolocationOptions } from '@react-native-community/geoloca
 //Geolocation 세밀한 설정 필요하면 설정
 // Geolocation.setRNConfiguration({skipPermissionRequests: false});
 
-type SectionProps = PropsWithChildren<{
-  title: string;
-}>;
+// type SectionProps = PropsWithChildren<{
+//   title: string;
+// }>;
 
-//웹뷰로 보낼때 액션
-type PostActionProps = 'TEST' | 'SEND_PERMISSION_STATUS' | 'SEND_FCM_TOKEN' | 'SEND_BACKGROUND_NOTIFICATION' | 'SEND_FOREGROUND_NOTIFICATION' | 'SEND_CURRENT_POSITION' | 'SEND_WATCH_POSITION';
 
 type PostMessageProps = {
   action: PostActionProps;
@@ -45,8 +43,6 @@ type PostMessageProps = {
   error?: Record<string, any>,
 };
 
-//웹뷰로부터 받을때 액션
-type ReceiveActionProps = 'TEST' | 'REQUEST_NOTIFICATION' | 'FCM_TOKEN' | 'CURRENT_POSITION' | 'START_WATCH_POSITION' | 'STOP_WATCH_POSITION';
 type ReceiveMessageProps = {
   action: ReceiveActionProps;
   payload?: Record<string, any>; // 객체 타입
