@@ -21,13 +21,16 @@ import {
   Colors,
 } from 'react-native/Libraries/NewAppScreen';
 
-import {Platform, PermissionsAndroid} from 'react-native';
+import {Platform, PermissionsAndroid } from 'react-native';
 import { FirebaseMessagingTypes, getMessaging, requestPermission } from '@react-native-firebase/messaging';
-  PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS);
+  
 
 import { name as appName } from './app.json';
 // import { WebViewNavigationEvent } from 'react-native-webview/lib/RNCWebViewNativeComponent';
 import Geolocation, { GeolocationOptions } from '@react-native-community/geolocation';
+
+// import * as permissions from 'react-native-permissions';
+import { request, requestMultiple, PERMISSIONS } from 'react-native-permissions'
 
 //Geolocation 세밀한 설정 필요하면 설정
 // Geolocation.setRNConfiguration({skipPermissionRequests: false});
@@ -48,47 +51,22 @@ type ReceiveMessageProps = {
   payload?: Record<string, any>; // 객체 타입
 };
 
+
+
 // 앱 등록
 AppRegistry.registerComponent(appName, () => App);
-/*
-function Section({children, title}: SectionProps): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
 
-  
-  return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
-  );
-}
-*/
-/*
-const runFirst = `
-  window.alert('hi');
-`
-const injectedJavascript = `(function() {
-  window.postMessage = function(data) {
-window.ReactNativeWebView.postMessage(data);
-};
-})()`
-*/
+PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS);
+
+//권한 요청 https://www.npmjs.com/package/react-native-permissions
+// requestMultiple(Platform.OS === 'ios' ?
+//   [PERMISSIONS.IOS.CAMERA, PERMISSIONS.IOS.MICROPHONE, PERMISSIONS.IOS.CAMERA]
+//   :
+//   [PERMISSIONS.ANDROID.CAMERA, PERMISSIONS.ANDROID.RECORD_AUDIO, PERMISSIONS.IOS.CAMERA])
+//   .then((result) => {
+//     console.log(result)
+//   });
+
 
 
 
@@ -225,7 +203,22 @@ async function receiveMessage(event:WebViewMessageEvent) {
 //푸쉬 허용 요청
 async function requestPostNotificationsPermission() {
 
+    //카메라, 음성 허용
+  requestCameraPermission();
+
+
+  requestMultiple(Platform.OS === 'ios' ?
+    [PERMISSIONS.IOS.CAMERA, PERMISSIONS.IOS.MICROPHONE, PERMISSIONS.IOS.CAMERA]
+    :
+    [PERMISSIONS.ANDROID.CAMERA, PERMISSIONS.ANDROID.RECORD_AUDIO, PERMISSIONS.IOS.CAMERA])
+    .then((result) => {
+      console.log(result)
+    });
+  
+  
+
   if (Platform.OS === 'android') {
+
     //테스트(O)
     //테스트 결과 : 
     // * 한번 거부한 뒤로는 허용여부가 뜨지 않음. (앱을 재시작시 다시 될 것으로 보임)
@@ -249,6 +242,20 @@ async function requestPostNotificationsPermission() {
     //TODO postMessage()필요
   }
 
+}
+
+
+//카메라 허용 요청
+async function requestCameraPermission() {
+
+
+  requestMultiple(Platform.OS === 'ios' ?
+    [PERMISSIONS.IOS.CAMERA, PERMISSIONS.IOS.MICROPHONE]
+    :
+    [PERMISSIONS.ANDROID.CAMERA, PERMISSIONS.ANDROID.RECORD_AUDIO])
+    .then((result) => {
+      console.log(result)
+    });
 }
 
 ///FCM Token 알아내기
@@ -364,6 +371,7 @@ const onLoadHandler = ({ nativeEvent }:any ) => {
       javaScriptEnabled={true}  // 자바스크립트 활성화
       domStorageEnabled={true}  // DOM Storage 활성화
       cacheEnabled={false}
+      
       /*
         웹 페이지가 카메라, 마이크, 또는 화면 공유와 같은 미디어 캡처 권한을 요청할 때, 권한 허용 방식에 대해 설정
         'grant': 특정 웹 페이지에서 카메라, 마이크, 또는 화면 공유와 같은 미디어 캡처 요청에 대해 자동으로 권한을 허용
