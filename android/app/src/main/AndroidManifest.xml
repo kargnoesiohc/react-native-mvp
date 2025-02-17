@@ -2,10 +2,11 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <!-- location관련 -->
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.RECORD_AUDIO" />
-    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" android:required="true"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" android:required="true"/>
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" android:required="true"/>
+    <uses-permission android:name="android.permission.CAMERA" android:required="true"/>
+    <uses-permission android:name="android.permission.RECORD_AUDIO" android:required="true"/>
     <application
       android:name=".MainApplication"
       android:label="@string/app_name"
